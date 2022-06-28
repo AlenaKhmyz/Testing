@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, queryByTestId } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
 import App from './App';
 
 describe ('TEST API', () => {
@@ -22,7 +23,7 @@ describe ('TEST API', () => {
     screen.debug()
   });
 
-   test('click event', () => {
+  test('click event', () => {
     render(<App />);
      const btn = screen.getByTestId('toggle-btn');
      expect(screen.queryByTestId('toggle-elem')).toBeNull()
@@ -30,6 +31,19 @@ describe ('TEST API', () => {
      expect(screen.queryByTestId('toggle-elem')).toBeInTheDocument()
      fireEvent.click(btn)
      expect(screen.queryByTestId('toggle-elem')).toBeNull()
+  });
+
+   test('input event', () => {
+    render(<App />);
+     const input = screen.getByPlaceholderText(/input value/i);
+     expect(screen.queryByTestId('value-elem')).toContainHTML('')
+    //  Искусственное событие
+    //  fireEvent.input(input, {
+    //   target: { value: '123123' }
+    //  })
+     //Близко к пользователю, обрабатываются события нажатия клавиш и т.д.
+     userEvent.type(input, '123123')
+     expect(screen.queryByTestId('value-elem')).toContainHTML('123123')
   });
 })
 
